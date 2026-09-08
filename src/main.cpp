@@ -120,6 +120,11 @@ private:
         generateInitialTubes();
     }
 
+    void resetBird() {
+        bird.velocityY = INITIAL_BIRD_VELOCITY_Y;
+        bird.birdShape.setPosition(BIRD_INITIAL_POSITION);
+    }
+
     void applyPhysicsToBird() {
         // Apply gravity to bird
         bird.velocityY += GRAVITY;
@@ -146,8 +151,7 @@ private:
             // Tubes reset handled by template
             resetTubes();
             // Reset bird to global initial settings
-            bird.birdShape.setPosition(BIRD_INITIAL_POSITION);
-            bird.velocityY = INITIAL_BIRD_VELOCITY_Y;
+            resetBird();
         }
     }
 
@@ -179,12 +183,20 @@ private:
         //  implicitly converted to a boolean value) depending on whether a rectangle intersects
         //  with another
         // ====== ====== ======
+        // Collect bird's bounding box and check intersection with each tube
+        sf::FloatRect birdBounds = bird.birdShape.getGlobalBounds();
 
         // ====== ====== ======
         // TODO: (Q4)
         //  If bird hits tube, game should reset by resetting the tubes and resetting the bird
         //  to its initial state (i.e., restarting the game)
         // ====== ====== ======
+        for (const auto& tube : tubes) { 
+            if(birdBounds.findIntersection(tube.topTube.getGlobalBounds()) || birdBounds.findIntersection(tube.bottomTube.getGlobalBounds())) {
+                resetTubes();
+                resetBird();
+            }
+        }
     }
 
 public:
