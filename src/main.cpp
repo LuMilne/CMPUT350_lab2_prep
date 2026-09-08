@@ -197,6 +197,21 @@ void handleInput(sf::Window& window, GameState& gameState, const ResourceManager
         // TODO: (Q2)
         //  implement jump logic (the key press should be space) and play jump sound fx
         // ====== ====== ======
+        else if (event->is<sf::Event::KeyPressed>()) {
+            if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyPressed->scancode == sf::Keyboard::Scan::Space) {
+                    // Set bird's velocity to jump speed
+                    gameState.bird.velocityY = JUMP_SPEED;
+                    // jumpSound hardcoded in ResourceManager (from template)
+                    if (!resources.jumpSound) {
+                        std::cerr << "Warning: jumpSound is not initialized" << std::endl;
+                    } else {
+                        resources.jumpSound->play();
+                    }
+                }
+            }
+            
+        }
     }
 }
 
@@ -246,6 +261,14 @@ int main() {
         //            std::cout << "value is " << *intPtr << '\n';
         //            std::cout << "raw address is " << intPtr.get() << '\n';
         // ====== ====== ======
+        resources.jumpSoundBuffer.reset(new sf::SoundBuffer());
+
+        // load "jump.wav" from /assets into jumpSoundBuffer
+        if (!resources.jumpSoundBuffer->loadFromFile("assets/jump.wav")) {
+            std::cerr << "Warning: Could not load jump.wav" << std::endl;
+        } else { // load jumpSoundBuffer into jumpSound
+            resources.jumpSound.reset(new sf::Sound(*resources.jumpSoundBuffer));
+        }
 
         bool shouldQuit = false;
         // Main game loop
