@@ -131,6 +131,8 @@ private:
         //    Should be equivalent to: bird.positionY += bird.velocityY;
         //  - Note: bird's x-coordinate will alway be exactly 100.f
         // ====== ====== ======
+        // Leave x position untouched, velocity is only vertical
+        bird.birdShape.setPosition({BIRD_INITIAL_POSITION.x, bird.birdShape.getPosition().y + bird.velocityY});
 
         // ====== ====== ======
         // TODO: (Q3)
@@ -138,6 +140,15 @@ private:
         //    (i.e., if it's no longer visible). If not, game should reset by clearing
         //    the tubes and restarting the game (setting the bird back to original initial position)
         // ====== ====== ======
+
+        // Trigger when radius of bird exceeds bounds (top border is a little lower than expected?)
+        if(bird.birdShape.getPosition().y < (0 + BIRD_SIZE) || bird.birdShape.getPosition().y > (WINDOW_HEIGHT + BIRD_SIZE)) {
+            // Tubes reset handled by template
+            resetTubes();
+            // Reset bird to global initial settings
+            bird.birdShape.setPosition(BIRD_INITIAL_POSITION);
+            bird.velocityY = INITIAL_BIRD_VELOCITY_Y;
+        }
     }
 
     void updateTubes() {
