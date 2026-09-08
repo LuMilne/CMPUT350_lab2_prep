@@ -27,6 +27,9 @@ const float TUBE_SPEED = 3.0f;
 // TODO: (Q1)
 //  Initial Bird Attributes
 //  Initialize the global (constant) variables for it here (radius, position, color)
+const float BIRD_SIZE = 15.0f;
+const sf::Vector2f BIRD_INITIAL_POSITION = sf::Vector2f(100.0f, 400.0f);
+const sf::Color BIRD_COLOR = sf::Color::Yellow;
 
 // ResourceManager just owns all the resources/assets you'd want in your game.
 // In an engine, you'd probably want to make this more flexible than what we have here
@@ -74,12 +77,19 @@ struct BirdState {
         //    appropriate size, color, and initial position.
         //  Note: consider using member initializer list to set the radius via ctor call.
         // ====== ====== ======
+        birdShape = sf::CircleShape();
+        birdShape.setRadius(BIRD_SIZE);
+        birdShape.setPosition(BIRD_INITIAL_POSITION);
+        birdShape.setOutlineColor(BIRD_COLOR);
+        birdShape.setFillColor(BIRD_COLOR);
     }
 
     // ====== ====== ======
     // TODO: (Q1)
     //  - add a field for the bird's shape.
     // ====== ====== ======
+    sf::CircleShape birdShape;
+
     float velocityY;
 };
 
@@ -201,6 +211,10 @@ void render(sf::RenderWindow& window, const GameState& gameState) {
     // ====== ====== ======
     // TODO: (Q1) Draw bird
     // ====== ====== ======
+    for(const BirdState& bird : {gameState.bird}) {
+        window.draw(bird.birdShape);
+    }
+
     window.display();
 }
 
